@@ -15,10 +15,13 @@ int main(void)
 	/* ---------------- LOGGING ---------------- */
 
 	logger = iniciar_logger();
+	logger = log_create("tp0.log","Pepe", true, LOG_LEVEL_INFO);
 
 	// Usando el logger creado previamente
 	// Escribi: "Hola! Soy un log"
 
+	log_info(logger,"Hola! Soy un log");
+	log_destroy(logger);
 
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
