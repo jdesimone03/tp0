@@ -21,17 +21,28 @@ int main(void)
 	// Escribi: "Hola! Soy un log"
 
 	log_info(logger,"Hola! Soy un log");
-	log_destroy(logger);
 
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
 	config = iniciar_config();
+	config = config_create("cliente.config");
+
+	if(config == NULL){
+		exit(0);
+	}
 
 	// Usando el config creado previamente, leemos los valores del config y los 
 	// dejamos en las variables 'ip', 'puerto' y 'valor'
+	ip = config_get_string_value(config, "IP");
+	puerto = config_get_string_value(config, "PUERTO");
+	valor = config_get_string_value(config, "CLAVE");
 
 	// Loggeamos el valor de config
+	log_info(logger,valor);
 
+	// Destruimos el config y el log
+	config_destroy(config);
+	log_destroy(logger);
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
