@@ -48,7 +48,7 @@ int main(void)
 
 	leer_consola(logger);
 	log_destroy(logger);
-	
+
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
 	// ADVERTENCIA: Antes de continuar, tenemos que asegurarnos que el servidor esté corriendo para poder conectarnos a él
@@ -61,7 +61,6 @@ int main(void)
 	// Armamos y enviamos el paquete
 	paquete(conexion);
 
-	
 	terminar_programa(conexion, logger, config);
 
 	/*---------------------------------------------------PARTE 5-------------------------------------------------------------*/
@@ -85,21 +84,18 @@ t_config *iniciar_config(void)
 void leer_consola(t_log *logger)
 {
 	char *leido;
+	leido = readline("> ");
 
 	// El resto, las vamos leyendo y logueando hasta recibir un string vacío
-	while (1)
+	while (strcmp(leido, "") > 0)
 	{
-		leido = readline("> ");
-		if (!strcmp(leido, ""))
-		{
-			free(leido);
-			break;
-		}
 		log_info(logger, leido);
 		free(leido);
+		leido = readline("> ");
 	}
+
 	// ¡No te olvides de liberar las lineas antes de regresar!
-	return;
+	free(leido);
 }
 
 void paquete(int conexion)
