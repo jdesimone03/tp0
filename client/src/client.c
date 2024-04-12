@@ -47,7 +47,6 @@ int main(void)
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
 	leer_consola(logger);
-	log_destroy(logger);
 
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
@@ -55,12 +54,16 @@ int main(void)
 
 	// Creamos una conexión hacia el servidor
 	conexion = crear_conexion(ip, puerto);
+	log_info(logger, "Conexión creada");
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
+	enviar_mensaje(valor,conexion);
+	log_info(logger,"Mensaje enviado");
 
 	// Armamos y enviamos el paquete
 	paquete(conexion);
 
+	log_destroy(logger);
 	terminar_programa(conexion, logger, config);
 
 	/*---------------------------------------------------PARTE 5-------------------------------------------------------------*/
