@@ -8,6 +8,7 @@ int main(void)
 	char *ip;
 	char *puerto;
 	char *valor;
+	int config_ok = 1;
 
 	t_log *logger;
 	t_config *config;
@@ -15,7 +16,6 @@ int main(void)
 	/* ---------------- LOGGING ---------------- */
 
 	logger = iniciar_logger();
-	logger = log_create("tp0.log", "Pepe", true, LOG_LEVEL_INFO);
 
 	// Usando el logger creado previamente
 	// Escribi: "Hola! Soy un log"
@@ -25,21 +25,62 @@ int main(void)
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
 	config = iniciar_config();
-	config = config_create("cliente.config");
 
 	if (config == NULL)
 	{
-		exit(0);
+		log_error(logger, "No existe el archivo de configuracion.");
+		exit(-1);
 	}
 
 	// Usando el config creado previamente, leemos los valores del config y los
 	// dejamos en las variables 'ip', 'puerto' y 'valor'
-	ip = config_get_string_value(config, "IP");
-	puerto = config_get_string_value(config, "PUERTO");
-	valor = config_get_string_value(config, "CLAVE");
+
+	if (config_has_property(config, "IP"))
+	{
+
+		ip = config_get_string_value(config, "IP");
+	}
+	else
+	{
+
+		log_error(logger, "No encontre el valor 'IP' en la config.");
+
+		config_ok = 0;
+	}
+
+	if (config_has_property(config, "PUERTO"))
+	{
+
+		puerto = config_get_string_value(config, "PUERTO");
+	}
+	else
+	{
+
+		log_error(logger, "No encontre el valor 'PUERTO' en la config.");
+
+		config_ok = 0;
+	}
+	if (config_has_property(config, "CLAVE"))
+	{
+
+		valor = config_get_string_value(config, "CLAVE");
+	}
+	else
+	{
+
+		log_error(logger, "No encontre el valor 'CLAVE' en la config.");
+
+		config_ok = 0;
+	}
+
+	if (!config_ok)
+	{
+		log_error(logger, "Error al cargar la configuracion! Revise bien el archivo e intente de nuevo.");
+		exit(-1);
+	}
 
 	// Loggeamos el valor de config
-	log_info(logger, valor);
+	log_info(logger, "IP: %s, PUERTO: %s, VALOR: %s", ip, puerto, valor);
 
 	// Destruimos el config y el log
 	config_destroy(config);
@@ -57,11 +98,12 @@ int main(void)
 	log_info(logger, "Conexión creada");
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
-	enviar_mensaje(valor,conexion);
-	log_info(logger,"Mensaje enviado");
+	enviar_mensaje(valor, conexion);
+	log_info(logger, "Mensaje enviado");
 
 	// Armamos y enviamos el paquete
 	paquete(conexion);
+	liberar_conexion(conexion);
 
 	log_destroy(logger);
 	terminar_programa(conexion, logger, config);
@@ -72,14 +114,14 @@ int main(void)
 
 t_log *iniciar_logger(void)
 {
-	t_log *nuevo_logger;
+	t_log *nuevo_logger = log_create("tp0.log", "Info", true, LOG_LEVEL_INFO);
 
 	return nuevo_logger;
 }
 
 t_config *iniciar_config(void)
 {
-	t_config *nuevo_config;
+	t_config *nuevo_config = config_create("cliente.config");
 
 	return nuevo_config;
 }

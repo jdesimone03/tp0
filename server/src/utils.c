@@ -22,9 +22,13 @@ int iniciar_servidor(void)
 	socket_servidor = socket(servinfo->ai_family,
 							 servinfo->ai_socktype,
 							 servinfo->ai_flags);
+
 	// Asociamos el socket a un puerto
+	log_info(logger, "Asosiando socket a un puerto");
 	bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen);
+
 	// Escuchamos las conexiones entrantes
+	log_info(logger, "Escucho las conexiones entrantes");
 	listen(socket_servidor, SOMAXCONN);
 
 	freeaddrinfo(servinfo);
@@ -40,18 +44,19 @@ int esperar_cliente(int socket_servidor)
 
 	// Aceptamos un nuevo cliente
 	int socket_cliente;
-	struct addrinfo hints, *servinfo, *p;
+	// struct addrinfo hints, *servinfo, *p;
 
-	memset(&hints, 0, sizeof(hints));
-	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_STREAM;
+	// memset(&hints, 0, sizeof(hints));
+	// hints.ai_family = AF_INET;
+	// hints.ai_socktype = SOCK_STREAM;
 
-	getaddrinfo("127.0.0.1", PUERTO, &hints, &servinfo);
+	// getaddrinfo("127.0.0.1", PUERTO, &hints, &servinfo);
 
+	log_info(logger, "Esperando conexion de cliente");
 	socket_cliente = accept(socket_servidor, NULL, NULL);
-	connect(socket_cliente, servinfo->ai_addr, servinfo->ai_addrlen);
-	
-	freeaddrinfo(servinfo);
+	// connect(socket_cliente, servinfo->ai_addr, servinfo->ai_addrlen);
+
+	// freeaddrinfo(servinfo);
 	log_info(logger, "Se conecto un cliente!");
 
 	return socket_cliente;
