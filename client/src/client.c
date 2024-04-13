@@ -95,6 +95,11 @@ int main(void)
 
 	// Creamos una conexión hacia el servidor
 	conexion = crear_conexion(ip, puerto);
+
+	if(conexion == -1){
+		log_error(logger, "Error al crear la conexion.");
+		exit(-1);
+	}
 	log_info(logger, "Conexión creada");
 
 	// Enviamos al servidor el valor de CLAVE como mensaje

@@ -21,11 +21,16 @@ int iniciar_servidor(void)
 	// Creamos el socket de escucha del servidor
 	socket_servidor = socket(servinfo->ai_family,
 							 servinfo->ai_socktype,
-							 servinfo->ai_flags);
+							 servinfo->ai_protocol);
 
 	// Asociamos el socket a un puerto
-	log_info(logger, "Asosiando socket a un puerto");
-	bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen);
+	log_info(logger, "Asociando socket a un puerto...");
+	if (bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen) != 0)
+	{
+		log_error(logger, "Error en el bind. Puede ser que haya dos instancias del mismo servidor activas.");
+		exit(-1);
+	}
+	log_info(logger, "Espero conexiones de un cliente por el puerto %s", PUERTO);
 
 	// Escuchamos las conexiones entrantes
 	log_info(logger, "Escucho las conexiones entrantes");
@@ -43,20 +48,10 @@ int esperar_cliente(int socket_servidor)
 	// assert(!"no implementado!");
 
 	// Aceptamos un nuevo cliente
-	int socket_cliente;
-	// struct addrinfo hints, *servinfo, *p;
+	// struct sockaddr_in dir_cliente;
+	// int tam_direccion = sizeof(struct sockaddr_in);
 
-	// memset(&hints, 0, sizeof(hints));
-	// hints.ai_family = AF_INET;
-	// hints.ai_socktype = SOCK_STREAM;
-
-	// getaddrinfo("127.0.0.1", PUERTO, &hints, &servinfo);
-
-	log_info(logger, "Esperando conexion de cliente");
-	socket_cliente = accept(socket_servidor, NULL, NULL);
-	// connect(socket_cliente, servinfo->ai_addr, servinfo->ai_addrlen);
-
-	// freeaddrinfo(servinfo);
+	int socket_cliente = accept(socket_servidor, NULL, NULL);
 	log_info(logger, "Se conecto un cliente!");
 
 	return socket_cliente;
