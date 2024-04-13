@@ -25,7 +25,9 @@ int iniciar_servidor(void)
 
 	// Asociamos el socket a un puerto
 	log_info(logger, "Asociando socket a un puerto...");
-	if (bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen) != 0)
+	if (bind(socket_servidor,
+			 servinfo->ai_addr,
+			 servinfo->ai_addrlen) != 0)
 	{
 		log_error(logger, "Error en el bind. Puede ser que haya dos instancias del mismo servidor activas.");
 		exit(-1);
