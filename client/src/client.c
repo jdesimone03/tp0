@@ -108,9 +108,8 @@ int main(void)
 
 	// Armamos y enviamos el paquete
 	paquete(conexion);
-	liberar_conexion(conexion);
 
-	log_destroy(logger);
+	// Termina el programa
 	terminar_programa(conexion, logger, config);
 
 	/*---------------------------------------------------PARTE 5-------------------------------------------------------------*/
@@ -163,4 +162,8 @@ void terminar_programa(int conexion, t_log *logger, t_config *config)
 {
 	/* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config)
 	  con las funciones de las commons y del TP mencionadas en el enunciado */
+	log_info(logger, "Finalizado el envio de datos. Chau!");
+	log_destroy(logger);
+	config_destroy(config);
+	liberar_conexion(conexion);
 }
