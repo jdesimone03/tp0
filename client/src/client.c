@@ -82,9 +82,6 @@ int main(void)
 	// Loggeamos el valor de config
 	log_info(logger, "IP: %s, PUERTO: %s, VALOR: %s", ip, puerto, valor);
 
-	// Destruimos el config y el log
-	config_destroy(config);
-
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
 	leer_consola(logger);
@@ -92,7 +89,6 @@ int main(void)
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
 	// ADVERTENCIA: Antes de continuar, tenemos que asegurarnos que el servidor esté corriendo para poder conectarnos a él
-
 	// Creamos una conexión hacia el servidor
 	conexion = crear_conexion(ip, puerto);
 
