@@ -92,7 +92,8 @@ int main(void)
 	// Creamos una conexión hacia el servidor
 	conexion = crear_conexion(ip, puerto);
 
-	if(conexion == -1){
+	if (conexion == -1)
+	{
 		log_error(logger, "Error al crear la conexion.");
 		exit(-1);
 	}
@@ -147,9 +148,19 @@ void paquete(int conexion)
 {
 	// Ahora toca lo divertido!
 	char *leido;
-	t_paquete *paquete;
+	t_paquete *paquete = crear_paquete();
+	leido = readline("> ");
+
+	while (strcmp(leido, "") > 0){
+		agregar_a_paquete(paquete,leido,strlen(leido)+1);
+		free(leido);
+		leido = readline("> ");
+	}
+	free(leido);
 
 	// Leemos y esta vez agregamos las lineas al paquete
+	enviar_paquete(paquete,conexion);
+	eliminar_paquete(paquete);
 
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
 }
